@@ -4,15 +4,24 @@ import com.example.challengejavaspringboot.entities.User;
 import com.example.challengejavaspringboot.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class UserService {
@@ -25,7 +34,6 @@ public class UserService {
 //    {
 //        return userRepository.save(user);
 //    }
-
     public static User.UserRole generateRandomRole() {
         User.UserRole[] values = User.UserRole.values();
         int length = values.length;
@@ -37,15 +45,18 @@ public class UserService {
     {
 
         List<User> list = new ArrayList();
+        AtomicInteger uniqueId=new AtomicInteger();
 
         while (count > 0)
         {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             Faker fakeuser = new Faker();
-            User user = new User(fakeuser.name().firstName(), fakeuser.name().lastName(),
-                    fakeuser.date().birthday(), fakeuser.address().city(), fakeuser.address().countryCode(),
+            String dob = sdf.format(fakeuser.date().birthday());
+            User user = new User((long) uniqueId.getAndIncrement(),fakeuser.name().firstName(), fakeuser.name().lastName(),
+                    dob, fakeuser.address().city(), fakeuser.address().countryCode(),
                     fakeuser.avatar().image(), fakeuser.company().name(), fakeuser.job().position(),
                     fakeuser.phoneNumber().cellPhone(), fakeuser.name().username(), fakeuser.internet().emailAddress(),
-                    fakeuser.internet().password(), this.generateRandomRole());
+                    fakeuser.internet().password(6, 10), this.generateRandomRole());
             list.add(user);
             count--;
         }
@@ -97,5 +108,20 @@ public class UserService {
                e.printStackTrace();
             }
         }
+    }
+
+    public String saveFile(String fileName, MultipartFile multipartFile)
+    {
+        Path uploadDirectory = Paths.get("Files-Upload");
+
+        String fileCode = RandomStringUtils.randomAlphabetic(8);
+        try(InputStream inputStream = multipartFile.getInputStream())
+        {
+            Path filePath = uploadDirectory.resolve(fileCode + "-" + fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving uploaded file: " + fileName, e);
+        }
+        return (fileCode);
     }
 }
