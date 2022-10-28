@@ -9,9 +9,6 @@ public class ChallengeJavaSpringBootApplication {
     public static void main(String[] args)
     {
         SpringApplication.run(ChallengeJavaSpringBootApplication.class, args);
-        String dv = "ajhdfa";
-        int hrlo = 5;
-
     }
 
 
