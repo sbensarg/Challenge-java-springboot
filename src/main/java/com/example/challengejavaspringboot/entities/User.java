@@ -4,44 +4,59 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
+//@Table(name = "users", uniqueConstraints={@UniqueConstraint(columnNames ={"username", "email"})})
 @Table(name = "users")
 @Getter
 @Setter
 @ToString
 public class User {
-
-    public enum UserRole {
-        admin,
-        user
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long        id;
+    @Column(name = "firstName")
     private String      firstName;
+    @Column(name = "lastName")
     private String      lastName;
-    private String        birthDate;
+    @Column(name = "birthDate")
+    private String      birthDate;
+    @Column(name = "city")
     private String      city;
+    @Column(name = "country")
     private String      country;
+    @Column(name = "avatar")
     private String      avatar;
+    @Column(name = "company")
     private String      company;
+    @Column(name = "jobPosition")
     private String      jobPosition;
+    @Column(name = "mobile")
     private String      mobile;
+    @Column(name = "username")
     private String      username;
+    @Column(name = "email")
     private String      email;
+    @Column(name = "password")
     private String      password;
-    private UserRole      role;
+    @Column(name = "role")
+    private String      role;
+
+    @Transient
+    private int total_records;
+
 
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String birthDate, String city, String country, String avatar, String company, String jobPosition, String mobile, String username, String email, String password, UserRole role) {
+    public User(Long id, String firstName, String lastName, String birthDate, String city, String country, String avatar, String company, String jobPosition, String mobile, String username, String email, String password, String role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -58,7 +73,7 @@ public class User {
         this.role = role;
     }
 
-    public User(String firstName, String lastName, String birthDate, String city, String country, String avatar, String company, String jobPosition, String mobile, String username, String email, String password, UserRole role) {
+    public User(String firstName, String lastName, String birthDate, String city, String country, String avatar, String company, String jobPosition, String mobile, String username, String email, String password, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -74,7 +89,19 @@ public class User {
         this.role = role;
     }
 
-//    public Long getId() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return username.equals(user.username) && email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, email);
+    }
+    //    public Long getId() {
 //        return id;
 //    }
 //
