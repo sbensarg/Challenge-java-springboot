@@ -6,26 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.javafaker.Faker;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.EntityLinks;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -34,10 +27,12 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    private int nbr_total = 0;
-    public User createuser(User user)
-    {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
+    private int nbr_total = 0;
+    public User createuser(User user) {
+        user.setPassword(this.passwordEncoder.encode((user.getPassword())));
         return userRepository.save(user);
     }
 
@@ -47,7 +42,7 @@ public class UserService {
     }
 
     public String encode(String passWord) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10, new SecureRandom());
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(passWord);
 
     }
@@ -169,12 +164,10 @@ public class UserService {
             {
                 for (User user : users)
                 {
-                    Optional<User> optRecord = userRepository.findEmailorUsername(user);
+                    Optional<User> optRecord = userRepository.findUserByEmailorUsername(user);
                     if(optRecord.isPresent()){
                         not_imp++;
                     }else{
-                        String encryptedPassword = this.encode(user.getPassword());
-                        user.setPassword(encryptedPassword);
                         this.createuser(user);
                     }
                 }
@@ -185,6 +178,11 @@ public class UserService {
             return (-1);
         }
         return (not_imp);
+    }
+
+    public Optional<User> findAuthenticatedUser(Authentication authentication) {
+        User obj = (User) authentication.getPrincipal();
+        return userRepository.findUserByEmailorUsername(obj);
     }
 
 }
