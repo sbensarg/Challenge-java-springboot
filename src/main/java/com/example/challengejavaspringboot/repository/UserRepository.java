@@ -14,5 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.email = :#{#req. email} or u.username = :#{#req.username}")
     Optional<User> findUserByEmailorUsername(@Param("req") User req);
     Optional<User> findJwtUserByUsername(String username);
+    Optional<User> findJwtUserByEmail(String email);
 
 }
