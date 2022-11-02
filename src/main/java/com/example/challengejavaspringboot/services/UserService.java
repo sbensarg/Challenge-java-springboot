@@ -36,16 +36,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public long countrecords()
-    {
-        return userRepository.count();
-    }
-
-    public String encode(String passWord) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder.encode(passWord);
-
-    }
     public static String generateRandomRole() {
         String[] values = {"user", "admin"};
         int length = values.length;
