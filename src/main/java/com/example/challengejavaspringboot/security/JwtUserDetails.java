@@ -14,14 +14,9 @@ public class JwtUserDetails implements UserDetails {
         this.user = user;
     }
 
-    public JwtUserDetails() {
-
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
-      //  return AuthorityUtils.createAuthorityList("ROLE_" + this.user.getRole());
     }
 
     @Override

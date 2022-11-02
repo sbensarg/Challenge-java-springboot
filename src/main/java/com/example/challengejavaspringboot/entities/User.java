@@ -1,6 +1,4 @@
 package com.example.challengejavaspringboot.entities;
-
-import com.example.challengejavaspringboot.security.JwtUserDetails;
 import lombok.*;
 import javax.persistence.*;
 
@@ -12,7 +10,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends JwtUserDetails {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)

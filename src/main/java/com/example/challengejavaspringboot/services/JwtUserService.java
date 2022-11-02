@@ -15,11 +15,6 @@ public class JwtUserService {
 
     private final UserRepository jwtUserRepository;
 
-
-    public Optional<User> findJwtUserByEmail(String email) {
-        return jwtUserRepository.findJwtUserByEmail(email);
-    }
-
     public User getJwtUserByUsername(String username) {
         return jwtUserRepository.findJwtUserByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found by username!"));
@@ -31,7 +26,6 @@ public class JwtUserService {
         if (!ret.isPresent()) {
             ret = jwtUserRepository.findJwtUserByEmail(username);
         }
-        System.out.println(ret);
         return ret.orElseThrow(()-> new EntityNotFoundException("User not found by username|email!"));
     }
 

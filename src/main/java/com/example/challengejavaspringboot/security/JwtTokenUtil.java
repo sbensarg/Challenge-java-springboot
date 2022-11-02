@@ -1,6 +1,5 @@
 package com.example.challengejavaspringboot.security;
 
-import com.example.challengejavaspringboot.entities.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +10,6 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-//    private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000; // 24 hour
-
     @Value("${jwt.secret}")
     private String SECRET_KEY;
     @Value("${jwt.expiration}")
@@ -21,7 +18,6 @@ public class JwtTokenUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     public String generateAccessToken(JwtUserDetails user) {
-        LOGGER.error("Dkhal hna generateAccessToken");
         return Jwts.builder()
                 .setSubject(String.format("%s", user.getUsername()))
                 .setIssuedAt(new Date())
@@ -47,7 +43,6 @@ public class JwtTokenUtil {
         } catch (SignatureException ex) {
             LOGGER.error("Signature validation failed");
         }
-
         return false;
     }
 
