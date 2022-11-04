@@ -1,6 +1,6 @@
 package com.example.challengejavaspringboot.security;
 
-import com.example.challengejavaspringboot.entities.User;
+import com.example.challengejavaspringboot.entity.User;
 import com.example.challengejavaspringboot.services.JwtUserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

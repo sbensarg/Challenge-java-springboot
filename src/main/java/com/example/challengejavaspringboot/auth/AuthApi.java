@@ -1,4 +1,5 @@
-package com.example.challengejavaspringboot.api;
+package com.example.challengejavaspringboot.auth;
+
 import com.example.challengejavaspringboot.security.JwtTokenUtil;
 import com.example.challengejavaspringboot.security.JwtUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +33,7 @@ public class AuthApi {
                     content = { @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Bad Request",
                     content = @Content),
-            @ApiResponse(responseCode = "401", description = "Invalid parameters supplied",
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content)})
@@ -53,6 +54,9 @@ public class AuthApi {
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

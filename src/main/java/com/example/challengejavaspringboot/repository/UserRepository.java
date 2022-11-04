@@ -1,6 +1,6 @@
-package com.example.challengejavaspringboot.repositories;
+package com.example.challengejavaspringboot.repository;
 
-import com.example.challengejavaspringboot.entities.User;
+import com.example.challengejavaspringboot.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

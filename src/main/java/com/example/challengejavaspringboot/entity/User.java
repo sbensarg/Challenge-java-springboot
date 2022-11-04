@@ -1,4 +1,4 @@
-package com.example.challengejavaspringboot.entities;
+package com.example.challengejavaspringboot.entity;
 import lombok.*;
 import javax.persistence.*;
 

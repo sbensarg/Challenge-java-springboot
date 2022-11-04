@@ -1,4 +1,4 @@
-package com.example.challengejavaspringboot.api;
+package com.example.challengejavaspringboot.auth;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

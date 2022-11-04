@@ -1,10 +1,9 @@
 package com.example.challengejavaspringboot.services;
 
-import com.example.challengejavaspringboot.entities.User;
-import com.example.challengejavaspringboot.repositories.UserRepository;
+import com.example.challengejavaspringboot.entity.User;
+import com.example.challengejavaspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 

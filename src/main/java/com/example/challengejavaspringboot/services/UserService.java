@@ -1,25 +1,22 @@
 package com.example.challengejavaspringboot.services;
 
-import com.example.challengejavaspringboot.entities.User;
-import com.example.challengejavaspringboot.repositories.UserRepository;
+import com.example.challengejavaspringboot.entity.User;
+import com.example.challengejavaspringboot.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.javafaker.Faker;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class UserService {
@@ -31,6 +28,7 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     private int nbr_total = 0;
+
     public User createuser(User user) {
         user.setPassword(this.passwordEncoder.encode((user.getPassword())));
         return userRepository.save(user);
@@ -45,9 +43,7 @@ public class UserService {
 
     public List<Object> generateUsers(int count)
     {
-
         List<Object> list = new ArrayList();
-        AtomicLong uniqueId = new AtomicLong();
 
         while (count > 0)
         {
@@ -124,12 +120,14 @@ public class UserService {
         }
     }
 
-    public int saveDataFromUploadfile(MultipartFile multipartFile)
-    {
-        int ret = -1;
+    public int saveDataFromUploadfile(MultipartFile multipartFile) throws HttpMediaTypeNotSupportedException, IOException {
+        int ret = 0;
         String extention = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         if (extention.equalsIgnoreCase("json"))
             ret = readDataFromJson(multipartFile);
+        else {
+            throw new HttpMediaTypeNotSupportedException("File Type Not Allowed!!");
+        }
         return (ret);
     }
 
@@ -142,10 +140,8 @@ public class UserService {
     {
         this.nbr_total = t;
     }
-    private int readDataFromJson(MultipartFile multipartFile)
-    {
+    private int readDataFromJson(MultipartFile multipartFile) throws IOException {
         int not_imp = 0;
-        try {
             InputStream inputStream = multipartFile.getInputStream();
             ObjectMapper mapper = new ObjectMapper();
             List<User> users = Arrays.asList(mapper.readValue(inputStream, User[].class));
@@ -162,11 +158,6 @@ public class UserService {
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            return (-1);
-        }
         return (not_imp);
     }
 

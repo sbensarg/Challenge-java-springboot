@@ -33,13 +33,13 @@ public class JwtTokenUtil {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-            LOGGER.error("JWT expired", ex.getMessage());
+            LOGGER.error("JWT expired");
         } catch (IllegalArgumentException ex) {
-            LOGGER.error("Token is null, empty or only whitespace", ex.getMessage());
+            LOGGER.error("Token is null, empty or only whitespace");
         } catch (MalformedJwtException ex) {
-            LOGGER.error("JWT is invalid", ex);
+            LOGGER.error("JWT is invalid");
         } catch (UnsupportedJwtException ex) {
-            LOGGER.error("JWT is not supported", ex);
+            LOGGER.error("JWT is not supported");
         } catch (SignatureException ex) {
             LOGGER.error("Signature validation failed");
         }

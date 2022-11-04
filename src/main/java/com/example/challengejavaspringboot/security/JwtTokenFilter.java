@@ -1,6 +1,6 @@
 package com.example.challengejavaspringboot.security;
 
-import com.example.challengejavaspringboot.entities.User;
+import com.example.challengejavaspringboot.entity.User;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;

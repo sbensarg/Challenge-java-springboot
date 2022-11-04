@@ -1,4 +1,4 @@
-package com.example.challengejavaspringboot.api;
+package com.example.challengejavaspringboot.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
