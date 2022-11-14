@@ -151,7 +151,7 @@ public class UserController {
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{username}")
     public ResponseEntity<Object> getUserInfo(@Parameter(description = "username of user to be retrieved") @PathVariable(value = "username") @Valid String username, Authentication authentication) {
-        User found = new User();
+        User found = null;
         try {
                 Optional<User> u = this.userService.findAuthenticatedUser(authentication);
                 if (u.get().getRole().equals("admin")) {
@@ -159,12 +159,15 @@ public class UserController {
                 } else if (u.get().getUsername().equals(username)) {
                     found = this.jwtUserService.getJwtUserByUsername(username);
                 }
+                if (found != null)
+                    return new ResponseEntity<>(found, HttpStatus.OK);
+                return new ResponseEntity<>("User not found by username" + username, HttpStatus.BAD_REQUEST);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>("User not found by username" + username, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("Something wrong in the server", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(found, HttpStatus.OK);
+
     }
 }
 
